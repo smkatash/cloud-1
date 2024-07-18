@@ -1,0 +1,9 @@
+---
+- name: Run setup-docker playbook
+  import_playbook: ./install-docker.yml
+
+- name: Prepare Docker volumes 
+  import_playbook: ./set-up-predeploy.yml
+
+- name: Run deploy-application playbook
+  import_playbook: ./deploy-app.yml
