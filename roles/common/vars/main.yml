@@ -1,0 +1,4 @@
+---
+user: ansible_admin
+user_shell: /bin/bash
+ssh_public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

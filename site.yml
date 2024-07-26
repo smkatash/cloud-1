@@ -1,0 +1,22 @@
+---
+- name: Prepare server for ansible use with admin user
+  hosts: webservers
+  become: yes
+  remote_user: root
+  tags: common
+  roles:
+    - common
+
+- name: Install docker and docker-compose
+  hosts: webservers
+  become: yes
+  remote_user: root
+  tags: docker
+  roles:
+    - docker
+
+# - name: Prepare Docker volumes 
+#   import_playbook: ./set-up-predeploy.yml
+
+# - name: Run deploy-application playbook
+#   import_playbook: ./deploy-app.yml
