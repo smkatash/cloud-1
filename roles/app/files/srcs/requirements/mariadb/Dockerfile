@@ -1,4 +1,4 @@
-FROM		debian:buster
+FROM		debian:bookworm
 
 # copy predefined scripts to tmp of container, data are cleared upon machine restart.
 COPY		./tools/script.sh 	/tmp/

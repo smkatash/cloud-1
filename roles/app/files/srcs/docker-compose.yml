@@ -19,7 +19,7 @@ services:
         depends_on:
          - wordpress
         ports:
-         - "80:80"
+         - "443:443"
         restart: unless-stopped
         networks:
          - inception
@@ -44,15 +44,15 @@ volumes:
      wp_vol:
          driver: local
          driver_opts:
-             type: 'none'
-             o: 'bind'
-             device: '/home/ubuntu/data/wordpress'
+             type: none
+             o: bind
+             device: BIND_PATH/wordpress
      db_vol:
          driver: local
          driver_opts:
              type: 'none'
-             o: 'bind'
-             device: '/home/ubuntu/data/db'
+             o: bind
+             device: BIND_PATH/db
 
 networks:
     inception:

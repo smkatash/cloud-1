@@ -1,6 +1,4 @@
 ---
-user: ansible_admin
-
 docker_dependencies:
   - apt-transport-https
   - ca-certificates

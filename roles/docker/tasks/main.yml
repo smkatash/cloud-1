@@ -1,29 +1,29 @@
 ---
 - name: Remove docker, if exists
-  apt:
+  ansible.builtin.apt:
     name: "{{ docker_uninstall }}"
     state: absent
     purge: yes
 - name: Install docker dependencies and update cache
-  apt:
+  ansible.builtin.apt:
     name: "{{ docker_dependencies }}"
     state: present
     update_cache: yes
 - name: Add GPG key
-  apt_key:
+  ansible.builtin.apt_key:
     url: "{{ docker_gpg_key }}"
     state: present
 - name: Add docker repository to apt
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ docker_repository }}"
     state: present
 - name: Install docker
-  apt:
+  ansible.builtin.apt:
     name: "{{ docker_packages }}"
     state: latest
     update_cache: yes
 - name: Check docker is active
-  service:
+  ansible.builtin.service:
     name: docker
     state: started
     enabled: yes
@@ -32,17 +32,17 @@
     name: docker
     state: present
 - name: Adding ansible user to docker group
-  user:
-    name: "{{ user }}"
+  ansible.builtin.user:
+    name: "{{ ansible_admin }}"
     groups: docker
     append: yes
 - name: Install docker-compose
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ docker_compose_url }}"
     dest: "{{ docker_compose_dest }}"
     mode: '0755'
 - name: Change file ownership, group and permissions
   ansible.builtin.file:
     path: "{{ docker_compose_dest }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ ansible_admin }}"
+    group: "{{ ansible_admin }}"

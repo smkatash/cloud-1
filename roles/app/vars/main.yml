@@ -1,0 +1,6 @@
+---
+bind_dir: "/var"
+
+volumes:
+    - db
+    - wordpress

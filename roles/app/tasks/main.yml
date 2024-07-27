@@ -1,0 +1,4 @@
+---
+- include_tasks: main/bootstrap.yml
+# - include_tasks: main/app-stop.yml
+- include_tasks: main/app-deploy.yml

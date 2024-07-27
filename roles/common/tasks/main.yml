@@ -1,23 +1,23 @@
 ---
 - name: Add a user for ansible tasks
-  user:
-    name: "{{ user }}"
+  ansible.builtin.user:
+    name: "{{ ansible_admin }}"
     shell: "{{ user_shell }}"
     create_home: yes
     state: present
 - name: Add ssh key for the user
-  authorized_key:
-    user: "{{ user }}"
+  ansible.builtin.authorized_key:
+    user: "{{ ansible_admin }}"
     key: "{{ ssh_public_key }}"
     state: present
 - name: Add user to sudoers
-  copy:
+  ansible.builtin.copy:
     src: sudoers_list
-    dest: "/etc/sudoers.d/{{ user }}"
+    dest: "/etc/sudoers.d/{{ ansible_admin }}"
     mode: '0440'
 - name: Ensure the sudoers file has the correct permission
-  file:
-    path: "/etc/sudoers.d/{{ user }}"
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/{{ ansible_admin }}"
     owner: root
     group: root
     mode: '0440'

@@ -15,8 +15,13 @@
   roles:
     - docker
 
-# - name: Prepare Docker volumes 
-#   import_playbook: ./set-up-predeploy.yml
+- name: Bootstrap application and deploy
+  hosts: webservers
+  become: yes
+  remote_user: root
+  tags: app
+  roles:
+    - app
 
 # - name: Run deploy-application playbook
 #   import_playbook: ./deploy-app.yml
