@@ -22,6 +22,3 @@
   tags: app
   roles:
     - app
-
-# - name: Run deploy-application playbook
-#   import_playbook: ./deploy-app.yml

@@ -1,13 +1,17 @@
 FROM		debian:bookworm
 
-# copy predefined scripts to tmp of container, data are cleared upon machine restart.
-COPY		./tools/script.sh 	/tmp/
 
 # installation of necessary packages
 RUN			apt-get update && apt-get install -y \
+			systemd \
 			mariadb-server \
 			mariadb-client \
 			dumb-init
+
+# copy predefined scripts to tmp of container, data are cleared upon machine restart.
+COPY		./tools/script.sh 	/tmp/
+
+RUN			chmod +x /tmp/script.sh
 
 # solves many of these problems: in front of the command it will take on the role of PID 1.
 # It immediately spawns the process as PID ~2, and then proxies on any signals it receives. 

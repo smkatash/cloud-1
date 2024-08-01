@@ -1,0 +1,8 @@
+---
+- name: Stop and reset app
+  hosts: webservers
+  become: yes
+  remote_user: root
+  tags: destroy
+  roles:
+    - destroy

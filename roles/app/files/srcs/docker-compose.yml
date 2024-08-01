@@ -3,7 +3,7 @@ version: '3.8'
 services:
     mariadb:
         container_name: mariadb
-        image: mariadb
+        image: mariadb:11.5
         build: ./requirements/mariadb
         restart: unless-stopped
         networks:
@@ -11,15 +11,21 @@ services:
         volumes:
          - db_vol:/var/lib/mysql/
         env_file: dev.env
+        healthcheck:
+            test: ["CMD-SHELL", "mysqladmin ping -u ${DB_USER} -p${DB_USER_PWD}"]
+            interval: 10s
+            retries: 5
+            start_period: 30s
+            timeout: 10s
 
     nginx:
         container_name: nginx
-        image: nginx
+        image: nginx:1.27.0
         build: ./requirements/nginx/
         depends_on:
          - wordpress
         ports:
-         - "443:443"
+         - 443:443
         restart: unless-stopped
         networks:
          - inception
@@ -29,15 +35,28 @@ services:
 
     wordpress:
         container_name: wordpress
-        image: wordpress
+        image: wordpress:6.6.1
         build: ./requirements/wordpress/
         depends_on:
-         - mariadb
+            mariadb:
+                condition: service_healthy
         restart: unless-stopped
         networks:
          - inception
         volumes:
          - wp_vol:/var/www/wordpress
+        env_file: dev.env
+    
+    phpmyadmin:
+        image: phpmyadmin:5.2.1
+        restart: unless-stopped
+        ports:
+            - 8080:80
+        depends_on:
+            mariadb:
+                condition: service_healthy
+        networks:
+         - inception
         env_file: dev.env
 
 volumes:
@@ -50,7 +69,7 @@ volumes:
      db_vol:
          driver: local
          driver_opts:
-             type: 'none'
+             type: none
              o: bind
              device: BIND_PATH/db
 

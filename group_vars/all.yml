@@ -1,2 +1,8 @@
 ---
 ansible_admin: ansible_admin
+
+bind_dir: "/var"
+
+volumes:
+    - db
+    - wordpress

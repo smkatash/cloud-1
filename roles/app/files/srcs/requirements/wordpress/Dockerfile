@@ -7,10 +7,10 @@ COPY	./conf/wp-config.php /tmp/
 
 # installation of necessary packages
 RUN		apt-get update && apt-get install -y \ 
-		php7.3 \
-		php-fpm \
-		php-cli \
-		php-mysql \
+		php8.2 \
+		php8.2-fpm \
+		php8.2-cli \
+		php8.2-mysql \
 		curl \
 		mariadb-client \
 		bash \
@@ -24,6 +24,7 @@ RUN		mkdir -p /run/php
 RUN		curl -s -L https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output /usr/bin/wp
 # rights for execution
 RUN 	chmod +x /usr/bin/wp
+RUN 	chmod +x /tmp/script.sh
 
 # a simple process supervisor and init system designed to run as PID 1 inside
 ENTRYPOINT	["/usr/bin/dumb-init"]
