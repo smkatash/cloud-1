@@ -1,3 +1,29 @@
 ---
-- name: Start the application with docker-compose
-  shell: docker-compose -f /app/srcs/docker-compose.yml --env-file /app/srcs/dev.env up -d
+- name: Check if containers are running
+  ansible.builtin.shell: |
+    docker-compose -f {{ compose_file_path }} --env-file {{ compose_env_file }} ps -q
+  register: containers_status
+  changed_when: false
+- name: Ensure the docker-compose app is stopped if running
+  ansible.builtin.shell: |
+    docker-compose -f {{ compose_file_path }} --env-file {{ compose_env_file }} down
+  when: containers_status.stdout_lines | length > 0
+  args:
+    executable: "{{ user_shell }}"
+- name: Create a shell script to start the docker-compose app
+  ansible.builtin.copy:
+    dest: /usr/local/bin/start_docker_compose_app.sh
+    content: |
+      #!/bin/bash
+      docker-compose -f {{ compose_file_path }} --env-file {{ compose_env_file }} up -d
+    mode: '0755'
+- name: Add a cron job to start the the docker-compose app on reboot
+  ansible.builtin.cron:
+    name: "Start the docker-compose on reboot"
+    special_time: reboot
+    job: "/usr/local/bin/start_docker_compose_app.sh"
+- name: Start the docker-compose app immediately
+  ansible.builtin.shell: /usr/local/bin/start_docker_compose_app.sh
+  args:
+    executable: "{{ user_shell }}"
+    

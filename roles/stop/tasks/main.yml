@@ -1,0 +1,5 @@
+---
+- name: Stop the application with docker-compose
+  ansible.builtin.shell: docker-compose -f {{ compose_file_path }} --env-file {{ compose_env_file }} down
+  args:
+    executable: "{{ user_shell }}"

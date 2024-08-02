@@ -1,5 +1,5 @@
 [webservers]
-web_server1 ansible_host=34.253.154.89 ansible_user=ubuntu
+web_server1 ansible_host=34.243.14.187 ansible_user=ubuntu
 
 [all:vars]
 ansible_ssh_private_key_file=./my-server-key.pem

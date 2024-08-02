@@ -1,3 +1,0 @@
----
-- name: Stop the application with docker-compose
-  shell: docker-compose -f /app/srcs/docker-compose.yml --env-file /app/srcs/dev.env down

@@ -10,6 +10,5 @@ deploy:
 destroy:
 	ansible-playbook ./site/destroy.yml
 
-reboot:
-	$(MAKE) destroy
-	$(MAKE) deploy
+stop:
+	ansible-playbook ./site/stop.yml

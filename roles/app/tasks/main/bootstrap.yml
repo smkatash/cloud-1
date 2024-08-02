@@ -3,18 +3,41 @@
   ansible.builtin.file:
     owner: "{{ ansible_admin }}"
     group: "{{ ansible_admin }}"
-    path: /app
+    path: "{{ remote_app_path }}"
     state: directory
 - name: Copy app files
   ansible.builtin.copy:
-    src: srcs
-    dest: /app
+    src: "{{ local_app_path }}"
+    dest: "{{ remote_app_path }}"
     owner: "{{ ansible_admin }}"
     group: "{{ ansible_admin }}"
     mode: '0755'
+- name: Decrypt env file
+  ansible.builtin.command:
+    cmd: ansible-vault decrypt "{{ local_secrets_file }}" --output="{{ local_env_file }}"
+  become: false
+  delegate_to: localhost
+- name: Copy env file to application directory
+  ansible.builtin.copy:
+    src: "{{ local_env_file }}"
+    dest: "{{ compose_env_file }}"
+    owner: "{{ ansible_admin }}"
+    group: "{{ ansible_admin }}"
+    mode: '0644'
+- name: Replace hostname in env file
+  ansible.builtin.replace:
+    path: "{{ compose_env_file }}"
+    regexp: '^DOMAIN_NAME=.*'
+    replace: "DOMAIN_NAME={{ ansible_host }}"
+- name: Remove decrypted file from control
+  ansible.builtin.file:
+    path: "{{ local_env_file }}"
+    state: absent
+  become: false
+  delegate_to: localhost
 - name: Set server name to ansible host
   ansible.builtin.replace:
-    path: /app/srcs/requirements/nginx/conf.d/nginx.conf
+    path: "{{ nginx_conf_path }}"
     regexp: localhost
     replace: "{{ ansible_host }}"
 - name: Create database and wordpress bind folder
@@ -26,6 +49,6 @@
   loop: "{{ volumes }}"
 - name: Set bind directory path for docker-compose
   ansible.builtin.replace:
-    path: /app/srcs/docker-compose.yml
+    path: "{{ compose_file_path }}"
     regexp: BIND_PATH
     replace: "{{ bind_dir }}"

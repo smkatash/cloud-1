@@ -1,8 +1,8 @@
 ---
-- name: Stop and remove the app
+- name: Stop the app
   hosts: webservers
   become: yes
   remote_user: root
-  tags: destroy
+  tags: stop
   roles:
-    - destroy
+    - stop

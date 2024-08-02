@@ -1,7 +1,8 @@
 ---
 - name: Stop the application with docker-compose
-  ansible.builtin.shell: docker-compose -f /app/srcs/docker-compose.yml --env-file /app/srcs/dev.env down
-
+  ansible.builtin.shell: docker-compose -f {{ compose_file_path }} --env-file {{ compose_env_file }} down
+  args:
+    executable: "{{ user_shell }}"
 - name: Retrieve Docker images
   command: docker image ls -q
   register: docker_images
@@ -9,6 +10,8 @@
 - name: Remove Docker images
   ansible.builtin.shell: |
     docker rmi {{ item }}
+  args:
+      executable: "{{ user_shell }}"
   loop: "{{ docker_images.stdout_lines }}"
   when: docker_images.stdout != ''
 
@@ -19,6 +22,8 @@
 - name: Clean all volumes
   ansible.builtin.shell: |
     docker volume rm {{ item }}
+  args:
+      executable: "{{ user_shell }}"
   loop: "{{ docker_volumes.stdout_lines }}"
   when: docker_volumes.stdout != ''
 

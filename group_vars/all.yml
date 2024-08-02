@@ -1,8 +1,11 @@
 ---
 ansible_admin: ansible_admin
-
-bind_dir: "/var"
+user_shell: /bin/bash
+bind_dir: /var
 
 volumes:
     - db
     - wordpress
+
+compose_file_path: /app/srcs/docker-compose.yml
+compose_env_file: /app/srcs/.env
