@@ -10,7 +10,7 @@
 - name: Install docker and docker-compose
   hosts: webservers
   become: yes
-  remote_user: root
+  remote_user: ansible_admin
   tags: docker
   roles:
     - docker
@@ -18,7 +18,7 @@
 - name: Bootstrap application and deploy
   hosts: webservers
   become: yes
-  remote_user: root
+  remote_user: ansible_admin
   tags: app
   roles:
     - app

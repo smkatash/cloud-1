@@ -27,8 +27,30 @@
 - name: Replace hostname in env file
   ansible.builtin.replace:
     path: "{{ compose_env_file }}"
-    regexp: '^DOMAIN_NAME=.*'
-    replace: "DOMAIN_NAME={{ ansible_host }}"
+    regexp: '^IP=.*'
+    replace: "IP={{ ansible_host }}"
+- name: Get UID for ansible_admin
+  ansible.builtin.command: id -u {{ ansible_admin }}
+  register: uid_result
+- name: Set PUID fact
+  ansible.builtin.set_fact:
+    puid: "{{ uid_result.stdout }}"
+- name: Get GID for ansible_admin
+  ansible.builtin.command: id -g {{ ansible_admin }}
+  register: gid_result
+- name: Set PGID fact
+  ansible.builtin.set_fact:
+    pgid: "{{ gid_result.stdout }}"
+- name: Replace PUID in env file
+  ansible.builtin.replace:
+    path: "{{ compose_env_file }}"
+    regexp: '^PUID=.*'
+    replace: "PUID={{ puid }}"
+- name: Replace PGID in env file
+  ansible.builtin.replace:
+    path: "{{ compose_env_file }}"
+    regexp: '^PGID=.*'
+    replace: "PGID={{ pgid }}"
 - name: Remove decrypted file from control
   ansible.builtin.file:
     path: "{{ local_env_file }}"

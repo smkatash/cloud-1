@@ -12,7 +12,7 @@ chown -R www-data:www-data /var/www/wordpress/wp-content/plugins/
 usermod -aG www-data www-data
 
 # WP installation : Creates WP tables in the database using the URL, title, and default admin user details provided.
-wp core install --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_DB_HOST --admin_password=$WP_HOST_PASSWORD --admin_email=$WP_HOST_EMAIL --skip-email --path=/var/www/wordpress --allow-root
+wp core install --url=$IP --title=$WP_TITLE --admin_user=$WP_DB_HOST --admin_password=$WP_HOST_PASSWORD --admin_email=$WP_HOST_EMAIL --skip-email --path=/var/www/wordpress --allow-root
 wp plugin update --all --path=/var/www/wordpress --allow-root
 wp user create $WP_USER $WP_USER_EMAIL --role=author --user_pass=$WP_USER_PASSWORD --path=/var/www/wordpress --allow-root
 

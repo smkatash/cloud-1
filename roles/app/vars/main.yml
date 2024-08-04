@@ -3,3 +3,6 @@ remote_app_path: /app
 local_app_path: srcs
 local_env_file: /tmp/.env
 local_secrets_file: /Users/kanykei/Desktop/ansible_tutorial/cloud-1/roles/app/files/secret.yml
+
+puid: "{{ lookup('pipe', 'id -u') }}"
+pgid: "{{ lookup('pipe', 'id -g') }}" 

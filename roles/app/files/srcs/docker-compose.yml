@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mariadb:
     container_name: mariadb
-    image: mariadb:11.5
     build: ./requirements/mariadb
     restart: unless-stopped
     networks:
@@ -20,9 +19,9 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:1.27.0
     build: ./requirements/nginx/
     ports:
+     - 80:80 
      - 443:443
     restart: unless-stopped
     depends_on:
@@ -36,7 +35,6 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: wordpress:6.6.1
     build: ./requirements/wordpress/
     depends_on:
       mariadb:
@@ -66,6 +64,18 @@ services:
      - inception
     env_file: .env
 
+  duckdns:
+    container_name: duckdns
+    build: ./requirements/duckdns/
+    depends_on:
+      - nginx
+    restart: unless-stopped
+    networks:
+     - inception
+    volumes:
+     - dns_vol:/duckdns
+    env_file: .env
+
 volumes:
    wp_vol:
      driver: local
@@ -79,6 +89,12 @@ volumes:
        type: none
        o: bind
        device: BIND_PATH/db
+   dns_vol:
+     driver: local
+     driver_opts:
+       type: none
+       o: bind
+       device: BIND_PATH/duckdns
 
 networks:
   inception:
